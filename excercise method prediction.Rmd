@@ -2,17 +2,9 @@
 title: "Excercise prediction"
 output: html_document
 ---
-This writeup will analyse the data from accelerometers on the belt, forearm, arm, and dumbell 
+This writeup will analyse the data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants, to predict the manner(the "classe" variable in the training set) in which they did the exercise. 
 
-of 6 participants, to predict the manner(the "classe" variable in the training set) in which 
-
-they did the exercise. 
-
-The data available in https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv and 
-
-more information is available from the website here: http://groupware.les.inf.puc-rio.br/har 
-
-(see the section on the Weight Lifting Exercise Dataset). 
+The data available in https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv and more information is available from the website here: http://groupware.les.inf.puc-rio.br/har (see the section on the Weight Lifting Exercise Dataset). 
 
 ```{r, echo=FALSE}
 library(lattice)
@@ -55,15 +47,11 @@ All the columns with NA and Blank will be removwed. The available variables will
 names(b)
 cc<-b[,8:n2]
 ```
-The first 7 variables just for the data indication and will not affect the result prediction 
-
-so these 7 variables will be removed in the prediction algo.
+The first 7 variables just for the data indication and will not affect the result prediction so these 7 variables will be removed in the prediction algo.
 
 
 Since different variable will have different range, need to perform pre-processing.
-The step will calculate each variable mean and standard devication then all the data will be 
-
-substracted by mean then divided by the standard devication.
+The step will calculate each variable mean and standard devication then all the data will be substracted by mean then divided by the standard devication.
 ```{r}
 n1<-nrow(cc)
 n2<-ncol(cc)
@@ -76,9 +64,7 @@ for (i in 1:(n2-1)){
   cc[,i]<-(cc[,i]-tmean[i])/tsd[i]
 }
 ```
-Then the training data will seperated to 3:1, 3 will be as training set and 1 will be as 
-
-testing set.
+Then the training data will seperated to 3:1, 3 will be as training set and 1 will be as testing set.
 
 ```{r}
 inTrain<-createDataPartition(y=cc$classe,p=.75,list=FALSE)
@@ -108,14 +94,6 @@ predresult<-cbind(predictions,testing$classe,predictions-testing$classe)
 1-sum(abs(predresult[,3])<.5*(predresult[,1]>1))/nrow(predresult)
 ```
 
-The in sample error (training set error) is very closed to the out of sample error(testing set 
+The in sample error (training set error) is very closed to the out of sample error(testing set error). However, the total accuracy is around 65%, it's not so hight. Besides, since use total 52 variables to perform the predication, there may be high chance to have over fit and if change testing set, there may be high out of sample error.
 
-error). However, the total accuracy is around 65%, it's not so hight. Besides, since use total 
-
-52 variables to perform the predication, there may be high chance to have over fit and if 
-
-change testing set, there may be high out of sample error.
-
-To reduce the over fit high out of sample error, extra work need to be done to reduce the 
-
-variables in the prediction but with the similar result.
+To reduce the over fit high out of sample error, extra work need to be done to reduce the variables in the prediction but with the similar result.
